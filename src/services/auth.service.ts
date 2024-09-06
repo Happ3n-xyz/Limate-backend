@@ -3,7 +3,7 @@ import UserService from './user.service';
 import jwt from 'jsonwebtoken';
 import { verifyMessage } from 'ethers';
 import boom from '@hapi/boom';
-import { generateSignString } from '../utils/random';
+import { generateRandomUsername, generateSignString } from '../utils/random';
 
 export default class AuthService {
 
@@ -13,14 +13,14 @@ export default class AuthService {
         this.userservice = new UserService();
     }
 
-    public async generateNonce(address: string, username: string) {
+    public async generateNonce(address: string) {
         address = address.toLowerCase();
         let user = await this.userservice.findByWalletAddress(address);
         const nonce = generateSignString(15);
       
         if (!user) {
             const userPayload = {
-                username: username,
+                username: await generateRandomUsername(),
                 address: address,
                 nonce: nonce,
             }

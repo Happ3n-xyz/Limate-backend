@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import AuthService from '../services/auth.service';
 import validatorHandler from '../middlewares/validator.handler';
-import { getGoogleAuthUrl, getGoogleToken, requestNonce, signIn } from '../schemas/auth.schema';
+import { requestNonce, signIn } from '../schemas/auth.schema';
 import passport from 'passport';
 
 const router = Router();
