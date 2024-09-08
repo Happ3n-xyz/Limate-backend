@@ -1,0 +1,17 @@
+{
+  "name": "limate-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "CreateScheme.js",
+  "scripts": {
+    "test": "createScheme"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ethereum-attestation-service/eas-sdk": "^2.6.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2"
+  }
+}
