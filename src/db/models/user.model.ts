@@ -31,6 +31,9 @@ const UserSchema = {
     type: DataTypes.STRING,
     field: 'profile_picture',
   },
+  badge: {
+    type: DataTypes.STRING,
+  },
   about: {
     type: DataTypes.STRING(180),
   },
@@ -78,7 +81,7 @@ class User extends Model<UserAttributes> {
   public updatedAt!: Date;
 
   static associate(models: any) {
-    // Define associations here
+    this.hasMany(models.Limate, { foreignKey: 'userId', as: 'limates' });
   }
 
   static config(sequelize: Sequelize) {
