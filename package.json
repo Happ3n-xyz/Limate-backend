@@ -37,6 +37,9 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
+    "@ethereum-attestation-service/eas-sdk": "^2.6.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/hapi__boom": "^9.0.1",
