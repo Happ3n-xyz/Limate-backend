@@ -16,3 +16,15 @@ export const generateSignString = (length : number): string => {
   
     return 'Sign this for security check ' + sign;
 }
+
+export const generateRandomCode = (length : number): string => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+
+  for (var i = 0; i < length; i++) {
+    let randomPos = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(randomPos);
+  }
+
+  return code;
+}

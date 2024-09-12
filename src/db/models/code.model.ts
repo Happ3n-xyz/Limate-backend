@@ -1,44 +1,25 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 import { USERS_TABLE } from './user.model';
 
-const LIMATES_TABLE = 'limates';
+const CODES_TABLE = 'codes';
 
-interface LimateAttributes {
-    id?: string;
-    username: string;
-    profilePicture?: string;
-    txHash?: string;
-    badge?: string;
-    about?: string;
+interface CodeAttributes {
+    id: string;
+    code: string;
     userId: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-const LimateSchema = {
+const CodeSchema = {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
     },
-    username: {
+    code: {
         allowNull: false,
-        type: DataTypes.STRING,
-        unique: true,
-    },
-    profilePicture: {
-        type: DataTypes.STRING,
-        field: 'profile_picture',
-    },
-    txHash: {
-        type: DataTypes.STRING,
-        field: 'tx_hash',
-    },
-    about: {
-        type: DataTypes.STRING(180),
-    },
-    badge: {
         type: DataTypes.STRING,
     },
     userId: {
@@ -46,8 +27,8 @@ const LimateSchema = {
         allowNull: false,
         type: DataTypes.UUID,
         references: {
-        model: USERS_TABLE,
-        key: 'id'
+            model: USERS_TABLE,
+            key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -66,14 +47,10 @@ const LimateSchema = {
     },
 };
 
-class Limate extends Model<LimateAttributes> {
+class Code extends Model<CodeAttributes> {
 
     public id!: string;
-    public username!: string;
-    public profilePicture?: string;
-    public txHash?: string;
-    public about?: string;
-    public badge?: string;
+    public code!: string;
     public userId!: string;
     public createdAt!: Date;
     public updatedAt!: Date;
@@ -85,11 +62,11 @@ class Limate extends Model<LimateAttributes> {
     static config(sequelize: Sequelize) {
         return {
         sequelize,
-        tableName: LIMATES_TABLE,
-        modelName: 'Limate',
+        tableName: CODES_TABLE,
+        modelName: 'Code',
         timestamps: true,
         };
     }
 }
 
-export { LIMATES_TABLE, LimateSchema, Limate, LimateAttributes };
+export { CODES_TABLE, CodeSchema, Code, CodeAttributes };

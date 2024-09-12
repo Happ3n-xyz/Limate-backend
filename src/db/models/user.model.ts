@@ -82,6 +82,7 @@ class User extends Model<UserAttributes> {
 
   static associate(models: any) {
     this.hasMany(models.Limate, { foreignKey: 'userId', as: 'limates' });
+    this.hasOne(models.Code, { foreignKey: 'userId', as: 'code' });
   }
 
   static config(sequelize: Sequelize) {
