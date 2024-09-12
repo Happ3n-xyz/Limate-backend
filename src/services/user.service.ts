@@ -38,10 +38,6 @@ export default class UserService {
 
     public async findByWalletAddress(address: string) {
         const user = await sequelize.models.User.findOne({ where: { address } });
-        if (!user)
-        {
-            throw boom.notFound('User not found');
-        }
         return user;
     }
 
