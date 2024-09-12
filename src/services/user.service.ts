@@ -12,9 +12,11 @@ export default class UserService {
 
         const newUserPayload = {
             ...user,
-            code: generateRandomCode(5)
+            code: {
+                code: generateRandomCode(5)
+            }
         };
-
+        console.log(newUserPayload);
         const newUser = await sequelize.models.User.create(newUserPayload, {
             include: [
                 {
@@ -42,7 +44,15 @@ export default class UserService {
     }
 
     public async findByUsername(username: string) {
-        const user = await sequelize.models.User.findOne({ where: { username } });
+        const user = await sequelize.models.User.findOne({ 
+            where: { username },
+            include: [
+                {
+                    model: sequelize.models.Code,
+                    as: 'code',
+                }
+            ]
+        });
         if (!user)
         {
             throw boom.notFound('User not found');
@@ -63,7 +73,9 @@ export default class UserService {
             throw boom.notFound('No Codes for this user');
         }
 
-        return code;
+        const codeUpdated = await code.update({ code: generateRandomCode(5) });
+
+        return codeUpdated;
     }
 
     public async getUserLimates(id: string) {
@@ -73,9 +85,7 @@ export default class UserService {
 
     public async registerLimate(userId: string, username: string, code: string) {
         const userToConnect = await this.findByUsername(username);
-        const currentCode = await this.getUserCode(userToConnect.dataValues.id);
-
-        if (currentCode.dataValues.code !== code)
+        if (userToConnect.dataValues.code.dataValues.code !== code)
         {
             throw boom.badRequest('Invalid code');
         }
