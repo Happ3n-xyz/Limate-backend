@@ -90,14 +90,13 @@ export default class UserService {
             throw boom.badRequest('Invalid code');
         }
 
-        //TODO: Add attestation service
-
         const newLimate : LimateAttributes = {
             username: userToConnect.dataValues.username,
             profilePicture: userToConnect.dataValues.profilePicture,
             about: userToConnect.dataValues.about,
             badge: userToConnect.dataValues.badge,
-            txHash: '0x00', //TODO add attestation hash
+            txHashAvax: '0x00',
+            txHashMinato: '0x00', //TODO add attestation hash
             userId: userId
         };
 

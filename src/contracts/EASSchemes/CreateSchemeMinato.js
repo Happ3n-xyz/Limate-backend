@@ -21,7 +21,7 @@ const signer = new ethers.Wallet(pk, provider)
 
 schemaRegistry.connect(signer);
 
-const schema = 'uint256 testID2';
+const schema = 'string username, string event, string address, string id, string badge, bytes data';
 const resolverAddress = '0x0000000000000000000000000000000000000000';
 const revocable = false;
 

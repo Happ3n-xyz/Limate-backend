@@ -7,7 +7,8 @@ interface LimateAttributes {
     id?: string;
     username: string;
     profilePicture?: string;
-    txHash?: string;
+    txHashAvax?: string;
+    txHashMinato?: string;
     badge?: string;
     about?: string;
     userId: string;
@@ -31,9 +32,13 @@ const LimateSchema = {
         type: DataTypes.STRING,
         field: 'profile_picture',
     },
-    txHash: {
+    txHashAvax: {
         type: DataTypes.STRING,
-        field: 'tx_hash',
+        field: 'tx_hash_avax',
+    },
+    txHashMinato: {
+        type: DataTypes.STRING,
+        field: 'tx_hash_minato',
     },
     about: {
         type: DataTypes.STRING(180),
@@ -71,7 +76,8 @@ class Limate extends Model<LimateAttributes> {
     public id!: string;
     public username!: string;
     public profilePicture?: string;
-    public txHash?: string;
+    public txHashAvax?: string;
+    public txHashMinato?: string;
     public about?: string;
     public badge?: string;
     public userId!: string;

@@ -18,26 +18,34 @@ const signer = new ethers.Wallet(pk, provider);
 eas.connect(signer);
 
 // Initialize SchemaEncoder with the schema string
-const schemaEncoder = new SchemaEncoder("uint256 testID2");
-const encodedData = schemaEncoder.encodeData([
-    { name: 'testID2', value: 1, type: 'uint256' }
-]);
-console.log("Encoded data:", encodedData);
+const schemaEncoder = new SchemaEncoder('string username, string event, string address, string id, string badge, bytes data');
 
-const schemaUID = "0x43cc2a5223774d93738015693e1c405e9618194d4bae43638e21e1df1c770c5e";
+export const createAttestationMinato = async (data, recipient) => {
+  const encodedData = schemaEncoder.encodeData([
+    { name: 'username', value: data.username, type: 'string' },
+    { name: 'event', value: data.event, type: 'string' },
+    { name: 'address', value: data.address, type: 'string' },
+    { name: 'id', value: data.id, type: 'string' },
+    { name: 'badge', value: data.badge, type: 'string' },
+    { name: 'data', value: data.data, type: 'bytes' }
+  ]);
+  console.log("Encoded data:", encodedData);
 
-const tx = await eas.attest({
-  schema: schemaUID,
-  data: {
-    recipient: "0xFc92f9989080B1d5478972896997710920DC83e1",
-    expirationTime: 0,
-    revocable: false,
-    data: encodedData,
-  },
-});
+  const schemaUID = "0x43cc2a5223774d93738015693e1c405e9618194d4bae43638e21e1df1c770c5e";
 
-const newAttestationUID = await tx.wait();
+  const tx = await eas.attest({
+    schema: schemaUID,
+    data: {
+      recipient: recipient,
+      expirationTime: 0,
+      revocable: false,
+      data: encodedData,
+    },
+  });
 
-console.log("New attestation UID:", newAttestationUID);
+  const newAttestationUID = await tx.wait();
 
-//UUID 0x7bfd60b1fdb2622b7bff6569f70f94337d9e59923831fba365e2ffc20a18ad37
+  console.log("New attestation UID:", newAttestationUID);
+
+  return newAttestationUID;
+}
