@@ -16,7 +16,7 @@ const swaggerDefinition = {
         description: 'Development server',
       },
       {
-        url: 'https://api.happ3n.xyz/api/',
+        url: 'https://limates.happ3n.xyz/api/',
         description: 'Production server',
       },
     ],

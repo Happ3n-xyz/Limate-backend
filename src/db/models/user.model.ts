@@ -7,6 +7,7 @@ interface UserAttributes {
   username: string;
   profilePicture?: string;
   about?: string;
+  badge?: string;
   isActive: boolean;
   address?: string;
   nonce?: string;
@@ -73,6 +74,7 @@ class User extends Model<UserAttributes> {
   public username!: string;
   public profilePicture?: string;
   public about?: string;
+  public badge?: string;
   public isActive!: boolean;
   public address?: string;
   public nonce?: string;

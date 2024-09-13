@@ -2,8 +2,10 @@ import boom from '@hapi/boom';
 import { config } from '../config/config';
 import { UserAttributes } from '../db/models/user.model';
 import sequelize from '../libs/sequelize';
-import { generateRandomCode } from '../utils/random';
+import { generateBytes, generateRandomCode } from '../utils/random';
 import { LimateAttributes } from '../db/models/limate.model';
+import createAttestationAvax from '../contracts/EASSchemes/CreateAttestationAvax';
+import { createAttestationMinato } from '../contracts/EASSchemes/CreateAttestationMinato';
 
 export default class UserService {
     constructor() {}
@@ -84,19 +86,42 @@ export default class UserService {
     }
 
     public async registerLimate(userId: string, username: string, code: string) {
+        console.log(userId, username, code);
         const userToConnect = await this.findByUsername(username);
         if (userToConnect.dataValues.code.dataValues.code !== code)
         {
             throw boom.badRequest('Invalid code');
         }
 
+        const txHashAvax = await createAttestationAvax({
+            username: userToConnect.dataValues.username,
+            event: 'ETH Mexico',
+            address: userToConnect.dataValues.address,
+            id: userToConnect.dataValues.id,
+            badge: userToConnect.dataValues.badge,
+            data: generateBytes()
+            },
+            userToConnect.dataValues.address
+        );
+
+        const txHashMinato = await createAttestationMinato({
+            username: userToConnect.dataValues.username,
+            event: 'ETH Mexico',
+            address: userToConnect.dataValues.address,
+            id: userToConnect.dataValues.id,
+            badge: userToConnect.dataValues.badge,
+            data: generateBytes()
+            },
+            userToConnect.dataValues.address
+        );
+
         const newLimate : LimateAttributes = {
             username: userToConnect.dataValues.username,
             profilePicture: userToConnect.dataValues.profilePicture,
             about: userToConnect.dataValues.about,
             badge: userToConnect.dataValues.badge,
-            txHashAvax: '0x00',
-            txHashMinato: '0x00', //TODO add attestation hash
+            txHashAvax: txHashAvax,
+            txHashMinato: txHashMinato,
             userId: userId
         };
 

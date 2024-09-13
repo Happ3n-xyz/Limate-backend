@@ -28,3 +28,10 @@ export const generateRandomCode = (length : number): string => {
 
   return code;
 }
+
+export const generateBytes = (length: number = 32): string =>{
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  
+  return Array.from(array).map(byte => byte.toString(16).padStart(2, '0')).join('');
+}

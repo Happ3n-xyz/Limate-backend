@@ -4,40 +4,40 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const rpc = process.env.RPC_URL_FUJI
-const pk = process.env.PK_FUJI
+const rpc = process.env.RPC_URL_MINATO
+const pk = process.env.PK_MINATO
 
 if (!rpc || !pk) {
     throw new Error('RPC_URL and PK must be provided');
 }
 
-const EASContractAddress = '0xA8cb9a36e42ae9805166c4422A64AAcEaC8Cbb33';
+const EASContractAddress = '0x26c4fC4a8dbf3df3f0881C8440FBdD0FB4b41769';
 const eas = new EAS(EASContractAddress);
 const provider = new ethers.JsonRpcProvider(rpc);
 const signer = new ethers.Wallet(pk, provider);
 eas.connect(signer);
 
 // Initialize SchemaEncoder with the schema string
-const schemaEncoder = new SchemaEncoder('string username, string event, string address, string id, string badge, bytes data');
+const schemaEncoder = new SchemaEncoder("string username, string location, string user_address, string id, string badge, bytes data");
 
-const createAttestationAvax = async (data, recipient) => {
+export const createAttestationMinato = async (data: any, recipient: string) => {
   const encodedData = schemaEncoder.encodeData([
     { name: 'username', value: data.username, type: 'string' },
-    { name: 'event', value: data.event, type: 'string' },
-    { name: 'address', value: data.address, type: 'string' },
+    { name: 'location', value: data.event, type: 'string' },
+    { name: 'user_address', value: data.address, type: 'string' },
     { name: 'id', value: data.id, type: 'string' },
     { name: 'badge', value: data.badge, type: 'string' },
-    { name: 'data', value: data.data, type: 'bytes' }
+    { name: 'data', value: '0x12345678', type: 'bytes' }
   ]);
   console.log("Encoded data:", encodedData);
 
-  const schemaUID = "0x43cc2a5223774d93738015693e1c405e9618194d4bae43638e21e1df1c770c5e";
+  const schemaUID = "0x13b8e42d4e08e5992b8ab8719a639876b56ad671ef9ed43ba5d6f2928ed1fc45";
 
   const tx = await eas.attest({
     schema: schemaUID,
     data: {
       recipient: recipient,
-      expirationTime: 0,
+      expirationTime: BigInt(0),
       revocable: false,
       data: encodedData,
     },
@@ -49,5 +49,3 @@ const createAttestationAvax = async (data, recipient) => {
 
   return newAttestationUID;
 }
-
-export default createAttestationAvax;
