@@ -15,6 +15,7 @@ export const requestNonce = Joi.object({
 
 export const signIn = Joi.object({
     address: Joi.string().required(),
+    nonce: Joi.string().required(),
     signature: Joi.string().required(),
-    nonce: Joi.string().required()
+    message: Joi.any(),
 });

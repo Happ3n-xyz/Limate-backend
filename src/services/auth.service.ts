@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { verifyMessage } from 'ethers';
 import boom from '@hapi/boom';
 import { generateRandomUsername, generateSignString } from '../utils/random';
+import { SiweMessage } from 'siwe';
+import { publicClient } from '../utils/viemClient';
 
 export default class AuthService {
 
@@ -16,7 +18,7 @@ export default class AuthService {
     public async generateNonce(address: string) {
         address = address.toLowerCase();
         let user = await this.userservice.findByWalletAddress(address);
-        const nonce = generateSignString(15);
+        const nonce = generateSignString(10);
       
         if (!user) {
             const userPayload = {
@@ -33,25 +35,36 @@ export default class AuthService {
         return { address, nonce };
     }
     
-    public async signedSignIn(address : string, nonce : string, signature : string) {
+    public async signedSignIn(address : string, nonce : string, signature : string, message: SiweMessage) {
+        console.log('signedSignIn call start');
+        
         address = address.toLowerCase();
         const user = await this.userservice.findByWalletAddress(address);
+        
+        
         if (!user) {
             throw boom.notFound('User not found');
         }
+        console.log('nonce', nonce);
+        console.log('user nonce ', user.get('nonce'));
 
         if (user.get('nonce') !== nonce) {
             throw boom.unauthorized('Invalid nonce');
         }
 
-        const verifyAddress = verifyMessage(nonce, signature);
-        const userAddress = user.get('address') as string;
-
-        if (verifyAddress.toLowerCase() !== userAddress.toLowerCase()) {
-            throw boom.unauthorized('Invalid signature');
+        if (!message) {
+            throw boom.badRequest('Invalid message');
         }
-
-        const newNonce = generateSignString(15);
+        const _message = new SiweMessage(message);
+        const valid = await publicClient.verifyMessage({
+            address: address as `0x${string}`,
+            message: _message.prepareMessage(),
+            signature: signature as `0x${string}`,
+        });
+        if (!valid) {
+            throw boom.unauthorized('Invalid signature')
+        }
+        const newNonce = generateSignString(10);
         const id = user.get('id');
         const updatedUser = await this.userservice.update(id as string, { nonce: newNonce });
 

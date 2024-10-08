@@ -6,7 +6,7 @@ export const generateRandomUsername = async () => {
 };
 
 export const generateSignString = (length : number): string => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+    const characters = '0123456789';
     let sign = '';
   
     for (var i = 0; i < length; i++) {
@@ -14,7 +14,7 @@ export const generateSignString = (length : number): string => {
       sign += characters.charAt(randomPos);
     }
   
-    return 'Sign this for security check ' + sign;
+    return sign;
 }
 
 export const generateRandomCode = (length : number): string => {

@@ -3,6 +3,7 @@ import AuthService from '../services/auth.service';
 import validatorHandler from '../middlewares/validator.handler';
 import { requestNonce, signIn } from '../schemas/auth.schema';
 import passport from 'passport';
+import { SiweMessage } from 'siwe';
 
 const router = Router();
 const authService = new AuthService();
@@ -110,8 +111,10 @@ export default (app: Router) => {
   validatorHandler(signIn, 'body'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { address, nonce, signature} = req.body as { address: string, nonce: string, signature: string };
-      const result = await authService.signedSignIn(address, nonce, signature);
+      console.log('login-user call start');
+      
+      const { address, nonce, signature, message} = req.body as { address: string, nonce: string, signature: string, message: SiweMessage};
+      const result = await authService.signedSignIn(address, nonce, signature, message);
       return res.json(result).status(200);
     } catch (error) {
       next(error);
