@@ -4,14 +4,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const rpc = process.env.RPC_URL_MINATO
-const pk = process.env.PK_MINATO
+const rpc = process.env.RPC_URL_FUJI
+const pk = process.env.PK_FUJI
 
 if(!rpc || !pk) {
   throw new Error('RPC_URL and PK must be provided');
 }
 
-const schemaRegistryContractAddress = '0xcea3db944B2c3949FE2DA780D68f4ba1E41A0b4A';
+const schemaRegistryContractAddress = '0x4200000000000000000000000000000000000020';
 const schemaRegistry = new SchemaRegistry(schemaRegistryContractAddress);
 console.log('SchemaRegistry exists :', !!schemaRegistryContractAddress);
 console.log('SchemaRegistry address:', schemaRegistryContractAddress);
@@ -39,4 +39,4 @@ const tx = await transaction.wait();
 console.log('tx info:', tx);
 console.log('Transaction hash:', tx.transactionHash);
 
-//address 0x43cc2a5223774d93738015693e1c405e9618194d4bae43638e21e1df1c770c5e
+//scheme 0x8abaa80ab2acc6983c434322cabbe66c3d0f7477c7e6ee001972beda33d03a25

@@ -4,20 +4,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const rpc = process.env.RPC_URL_FUJI
-const pk = process.env.PK_FUJI
+const rpc = process.env.RPC_URL
+const pk = process.env.WALLET_PK
+const schemaUID = process.env.SCHEMA_UID;
+const schemaRegistryContractAddress = process.env.SCHEMA_REGISTRY_ADDRESS;
 
-if(!rpc || !pk) {
-  throw new Error('RPC_URL and PK must be provided');
+if(!rpc || !pk || !schemaUID || !schemaRegistryContractAddress) {
+  throw new Error('RPC_URL, schema uid, registry address and PK must be provided');
 }
 
-const schemaRegistryContractAddress = "0xF744647915746Af87B590915d5CCc1B0eb58732e"; // Sepolia 0.26
 const schemaRegistry = new SchemaRegistry(schemaRegistryContractAddress);
 const provider = new ethers.JsonRpcProvider(rpc)
 
 schemaRegistry.connect(provider);
 
-const schemaUID = "0x43cc2a5223774d93738015693e1c405e9618194d4bae43638e21e1df1c770c5e";
 
 const schemaRecord = await schemaRegistry.getSchema({ uid: schemaUID });
 

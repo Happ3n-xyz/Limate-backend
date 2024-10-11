@@ -4,8 +4,8 @@ import { UserAttributes } from '../db/models/user.model';
 import sequelize from '../libs/sequelize';
 import { generateBytes, generateRandomCode } from '../utils/random';
 import { LimateAttributes } from '../db/models/limate.model';
-import createAttestationAvax from '../contracts/EASSchemes/CreateAttestationAvax';
 import { createAttestationMinato } from '../contracts/EASSchemes/CreateAttestationMinato';
+import createAttestation from '../contracts/EASSchemes/CreareAttestation';
 
 export default class UserService {
     constructor() {}
@@ -93,18 +93,7 @@ export default class UserService {
             throw boom.badRequest('Invalid code');
         }
 
-        const txHashAvax = await createAttestationAvax({
-            username: userToConnect.dataValues.username,
-            event: 'ETH Mexico',
-            address: userToConnect.dataValues.address,
-            id: userToConnect.dataValues.id,
-            badge: userToConnect.dataValues.badge,
-            data: generateBytes()
-            },
-            userToConnect.dataValues.address
-        );
-
-        const txHashMinato = await createAttestationMinato({
+        const txHash = await createAttestation({
             username: userToConnect.dataValues.username,
             event: 'ETH Mexico',
             address: userToConnect.dataValues.address,
@@ -120,8 +109,8 @@ export default class UserService {
             profilePicture: userToConnect.dataValues.profilePicture,
             about: userToConnect.dataValues.about,
             badge: userToConnect.dataValues.badge,
-            txHashAvax: txHashAvax,
-            txHashMinato: txHashMinato,
+            txHashAvax: txHash,
+            txHashMinato: txHash,
             userId: userId
         };
 
