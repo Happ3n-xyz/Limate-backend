@@ -131,3 +131,5 @@ dist
 
 # Postgres
 /postgres
+
+/src/uploads
