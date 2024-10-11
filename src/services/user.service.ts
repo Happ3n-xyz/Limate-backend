@@ -4,7 +4,6 @@ import { UserAttributes } from '../db/models/user.model';
 import sequelize from '../libs/sequelize';
 import { generateBytes, generateRandomCode } from '../utils/random';
 import { LimateAttributes } from '../db/models/limate.model';
-import { createAttestationMinato } from '../contracts/EASSchemes/CreateAttestationMinato';
 import createAttestation from '../contracts/EASSchemes/CreareAttestation';
 
 export default class UserService {
@@ -86,13 +85,17 @@ export default class UserService {
     }
 
     public async registerLimate(userId: string, username: string, code: string) {
-        console.log(userId, username, code);
+        try {
+            console.log(userId, username, code);
         const userToConnect = await this.findByUsername(username);
         if (userToConnect.dataValues.code.dataValues.code !== code)
         {
+            console.log('error finding code, throwing error');
+            
             throw boom.badRequest('Invalid code');
         }
-
+        console.log('prev to create attestation');
+        
         const txHash = await createAttestation({
             username: userToConnect.dataValues.username,
             event: 'ETH Mexico',
@@ -109,12 +112,14 @@ export default class UserService {
             profilePicture: userToConnect.dataValues.profilePicture,
             about: userToConnect.dataValues.about,
             badge: userToConnect.dataValues.badge,
-            txHashAvax: txHash,
-            txHashMinato: txHash,
+            txHash: txHash,
             userId: userId
         };
 
         const limate = await sequelize.models.Limate.create(newLimate as any);
         return limate;
+        } catch (error) {
+            console.log('error creating limate', error);
+        }
     }
 }

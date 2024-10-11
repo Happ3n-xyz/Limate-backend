@@ -102,6 +102,8 @@ export default (app: Router) => {
   validatorHandler(createLimate, 'body'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('entering to create limate');
+      
       const { id } = req.user as { id: string };
       const { code, username } = req.body;
       const result = await userService.registerLimate(id, username, code);

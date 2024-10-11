@@ -33,7 +33,7 @@ const createAttestation = async (data: any, recipient: string) => {
   ]);
   console.log("Encoded data:", encodedData);
 
-const tx = await eas.attest({
+  const tx = await eas.attest({
     schema: schemaUID,
     data: {
       recipient: recipient,
