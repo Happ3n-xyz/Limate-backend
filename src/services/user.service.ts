@@ -98,7 +98,7 @@ export default class UserService {
         
         const txHash = await createAttestation({
             username: userToConnect.dataValues.username,
-            event: 'ETH Mexico',
+            event: 'Base Latam 2024',
             address: userToConnect.dataValues.address,
             id: userToConnect.dataValues.id,
             badge: userToConnect.dataValues.badge,
