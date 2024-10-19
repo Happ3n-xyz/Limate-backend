@@ -63,6 +63,14 @@ export default class UserService {
 
     public async update(id: string, changes : Partial<Omit<UserAttributes, 'id' | 'role' | 'createdAt'>>) {
         const user = await this.findById(id);
+        if (changes.username) {
+            const userWithUsername = await sequelize.models.User.findOne({ where: { username: changes.username } });
+            if (userWithUsername)
+            {
+                throw boom.badRequest('Username already exists');
+            }
+        }
+
         const updatedUser = await user.update(changes);
         return updatedUser;
     }
@@ -97,12 +105,12 @@ export default class UserService {
         console.log('prev to create attestation');
         
         const txHash = await createAttestation({
-            username: userToConnect.dataValues.username,
-            event: 'Base Latam 2024',
-            address: userToConnect.dataValues.address,
-            id: userToConnect.dataValues.id,
-            badge: userToConnect.dataValues.badge,
-            data: generateBytes()
+                username: userToConnect.dataValues.username,
+                event: 'Avalanche Summit Latam',
+                address: userToConnect.dataValues.address,
+                id: userToConnect.dataValues.id,
+                badge: userToConnect.dataValues.badge,
+                data: generateBytes()
             },
             userToConnect.dataValues.address
         );

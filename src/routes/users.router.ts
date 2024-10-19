@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import validatorHandler from '../middlewares/validator.handler';
 import passport from 'passport';
 import UserService from '../services/user.service';
-import { createLimate } from '../schemas/user.schema';
+import { createLimate, updateUser } from '../schemas/user.schema';
 
 const router = Router();
 const userService = new UserService();
@@ -112,5 +112,44 @@ export default (app: Router) => {
       next(e);
     }
   });
+
+      /**
+ * @swagger
+ * /users:
+ *   patch:
+ *     tags:
+ *       - Users
+ *     summary: Update user info(requires authentication token)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Returns the json with the updated user
+ *       4XX:
+ *         description: Error in request
+ */
+  router.patch('/',
+    passport.authenticate('jwt', {session: false}),
+    validatorHandler(updateUser, 'body'),
+    async (req: Request, res: Response, next: NextFunction) => {
+    try {   
+      const { id } = req.user as { id: string };
+      const { username } = req.body;
+      const result = await userService.update(id, {username});
+      return res.json(result).status(200);
+    } catch (e) {
+      next(e);
+    }
+  });
+      
 
 }
